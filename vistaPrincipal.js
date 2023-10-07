@@ -18,7 +18,7 @@ export function inicializarManejadores() {
     manejadorEventoFilas(filas);
 
     document.addEventListener('refrescarTablaVehiculos', (event) => {
-        const LS_vehiculos = event.detail;
+        const LS_vehiculos = localStorage.getObj("vehiculos");
         vaciarElemento(formDatos);
         actualizarTabla(LS_vehiculos);
         const filas = document.querySelectorAll('tr');
@@ -62,7 +62,6 @@ export function vaciarElemento(elemento) {
 }
 
 function crearCheckboxs(){
-
     let LS_vehiculos = localStorage.getObj("vehiculos");
     let auxProps = Object.getOwnPropertyNames(LS_vehiculos[0]);
     let checks = [];

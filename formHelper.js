@@ -71,6 +71,15 @@ export function crearFormUpdate(formulario, obj) {
     botonEliminar.innerText = "Eliminar";
     elementos.push(botonEliminar);
 
+    const botonCancelar = document.createElement('button');
+    botonCancelar.innerText = "Cancelar";
+    elementos.push(botonCancelar);
+
+    botonCancelar.addEventListener('click', () => {
+        const eventRefrescar = new CustomEvent('refrescarTablaVehiculos');
+        document.dispatchEvent(eventRefrescar);
+    });
+
     botonEliminar.addEventListener('click', () =>{
         let LS_Vehiculos = toObjs(localStorage.getObj("vehiculos"));
 
@@ -79,9 +88,9 @@ export function crearFormUpdate(formulario, obj) {
         localStorage.removeItem("vehiculos");
         localStorage.setObj("vehiculos", LS_Vehiculos);
 
-        const eventRefrescar = new CustomEvent('refrescarTablaVehiculos', { detail: LS_Vehiculos });
+        const eventRefrescar = new CustomEvent('refrescarTablaVehiculos');
         document.dispatchEvent(eventRefrescar);
-    })
+    });
 
 
     botonGuardar.addEventListener('click', () => {
@@ -108,7 +117,7 @@ export function crearFormUpdate(formulario, obj) {
             localStorage.removeItem("vehiculos");
             localStorage.setObj("vehiculos", LS_Vehiculos);
 
-            const event = new CustomEvent('refrescarTablaVehiculos', { detail: LS_Vehiculos });
+            const event = new CustomEvent('refrescarTablaVehiculos');
             document.dispatchEvent(event);
         }
     });
