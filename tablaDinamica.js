@@ -8,6 +8,7 @@ function crearCabecera(row) {
         const th = document.createElement("th");
         th.textContent = key; //agarro el nombre de las propiedades del objeto y se los asigno
         tr.appendChild(th);
+        th.id = key;
     }
     cabecera.appendChild(tr);
     return cabecera;
@@ -56,15 +57,4 @@ export function crearTabla(data) {
     tabla.appendChild(crearCuerpo(data));
 
     return tabla;
-}
-
-export function agregarManejadorTR(tr, lista){
-    if(tr){
-        tr.addEventListener("click", function(e){
-            
-            mostrarAnuncio(
-                (lista.filter((el) => el.id == e.target.parentNode.dataset.id ))[0]
-            );            
-        })
-    }
 }

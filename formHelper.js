@@ -52,7 +52,7 @@ export function crearFormUpdate(formulario, obj) {
         obj = new Vehiculo("", "", "", "");
     }
 
-    const props = Object.getOwnPropertyNames(obj);
+    let props = Object.getOwnPropertyNames(obj);
     props.forEach(p => {
         let soloLectura = false;
         if(p == "id"){
@@ -87,8 +87,7 @@ export function crearFormUpdate(formulario, obj) {
     botonGuardar.addEventListener('click', () => {
         let inputs = [];
         props.forEach(p => {
-            let input = document.getElementById(p);
-            inputs[p] = input.value;
+            inputs[p] = document.getElementsByTagName("input")[p].value;
         });
 
         let objModificado = null;
@@ -153,6 +152,7 @@ export function crearFormAlta(formulario){
                 nuevosFormFields.push(ret.nuevoLabel);
                 nuevosFormFields.push(ret.nuevoInput);
             }
+            obj = new Terrestre(obj.id, obj.modelo, obj.velMax, obj.anoFab, "", "");
         }
         else if(selectorTipo.selectedOptions[0].value == "Aereo"){
             if(!formulario["altMax"]){
@@ -165,19 +165,13 @@ export function crearFormAlta(formulario){
                 nuevosFormFields.push(ret.nuevoLabel);
                 nuevosFormFields.push(ret.nuevoInput);
             }
+            obj = new Aereo(obj.id, obj.modelo, obj.velMax, obj.anoFab, "", "");
         }
         nuevosFormFields.forEach((e) => formulario.appendChild(e));
-
-
-        // for (let i = 0; i < formulario.length; i++) {
-        //     const elemento = formulario[i];
-        //     if (elemento.id) {
-        //         console.log("ID del elemento:", elemento.id);
-        //     }
-        // }
+        
     })
 
-    const props = Object.getOwnPropertyNames(obj);
+    let props = Object.getOwnPropertyNames(obj);
     props.forEach(p => {
         let soloLectura = false;
         if(p == "id"){
@@ -195,9 +189,9 @@ export function crearFormAlta(formulario){
 
     botonGuardar.addEventListener('click', () => {
         let inputs = [];
+        props = Object.getOwnPropertyNames(obj);
         props.forEach(p => {
-            let input = document.getElementById(p);
-            inputs[p] = input.value;
+            inputs[p] = document.getElementsByTagName("input")[p].value;
         });
         if(!validarInputs(inputs, selectorTipo.selectedOptions[0].value)) {
             alert("Datos incorrectos");

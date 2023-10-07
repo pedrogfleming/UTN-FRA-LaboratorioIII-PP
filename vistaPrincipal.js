@@ -1,4 +1,4 @@
-import { crearTabla, agregarManejadorTR } from "./tablaDinamica.js";
+import { crearTabla } from "./tablaDinamica.js";
 import { crearFormUpdate,  crearFormAlta} from "./formHelper.js";
 import { toObjs } from "./vehiculo.js"
 
@@ -77,12 +77,26 @@ function crearCheckboxs(){
         lbchbox.innerHTML = p;
 
 
-        chbox.addEventListener("checked", (e) => {
-            console.log(e.checked);
-        })
+        chbox.addEventListener("change", (event) => {
+            actualizarColumnasTabla(p, event.currentTarget.checked);
+        });
 
         complementosTabla.appendChild(chbox);
         complementosTabla.appendChild(lbchbox);
+
+        
     });
 }
 
+//No funciona
+function actualizarColumnasTabla(columna, mostrar) {
+    const tabla = document.getElementById('divTabla');
+    const columnas = tabla.querySelectorAll(`td[data-column="${columna}"]`);
+    columnas.forEach((celda) => {
+        if (mostrar) {
+            celda.style.display = "table-cell";
+        } else {
+            celda.style.display = "none";
+        }
+    });
+}
