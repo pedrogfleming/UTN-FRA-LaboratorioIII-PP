@@ -28,7 +28,7 @@ export class Terrestre extends Vehiculo {
     }
 }
 
-export function toObjs(jsonArray){
+export function toObjs(jsonArray) {
     let vehiculos = jsonArray.map((item) => {
         if (item.hasOwnProperty("autonomia") && item.hasOwnProperty("altMax")) {
             return new Aereo(item.id, item.modelo, item.velMax, item.anoFab, item.altMax, item.autonomia);
@@ -39,4 +39,8 @@ export function toObjs(jsonArray){
         }
     });
     return vehiculos;
+}
+
+function Ordenar(arr, criterio) {
+    arr.sort((a, b) => a[criterio] > b[criterio]);
 }
