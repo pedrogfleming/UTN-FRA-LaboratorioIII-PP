@@ -1,5 +1,5 @@
 import { crearTabla } from "./tablaDinamica.js";
-import { crearFormUpdate, crearFormAlta } from "./formHelper.js";
+import { crearFormUpdate, crearFormAlta, crearSelector } from "./formHelper.js";
 import { toObjs } from "./vehiculo.js"
 import { Arr_GetAllUniqueProps} from "./arrayHelpers.js"
 
@@ -8,11 +8,13 @@ let formDatos;
 let complementosTabla;
 
 let vistaData = document.getElementById("dataOut");
+let filtroSeleccionado = 0;
 
 export function inicializarManejadores() {
     const LS_vehiculos = localStorage.getObj("vehiculos");
     divTabla = document.getElementById('divTabla');
     formDatos = document.getElementById('formDatos');
+    
     complementosTabla = document.getElementById('complements');
     actualizarTabla(LS_vehiculos);
     const filas = document.querySelectorAll('tr');
@@ -51,8 +53,34 @@ export function inicializarManejadores() {
 export function actualizarTabla(vehiculos) {
     vaciarElemento(divTabla);
     vaciarElemento(complementosTabla);
-    crearCheckboxs();
 
+    let opciones = ["Todos", "Terrestre", "Aereo"];
+    const selectorTipo = crearSelector(opciones);
+    selectorTipo.selectedIndex = filtroSeleccionado;
+    selectorTipo.addEventListener("change", () =>{
+        let LS_vehiculos = toObjs(localStorage.getObj("vehiculos"));
+        if (selectorTipo.selectedOptions[0].value == "Terrestre"){
+            LS_vehiculos = LS_vehiculos.filter(obj => obj.constructor.name == "Terrestre" );
+            // Terrestre
+            filtroSeleccionado = 1;
+        }
+        else if(selectorTipo.selectedOptions[0].value == "Aereo"){
+            LS_vehiculos = LS_vehiculos.filter(obj => obj.constructor.name == "Aereo" );
+            // Aereo
+            filtroSeleccionado  = 2;
+        }
+        else{
+            // Todos
+            filtroSeleccionado  = 0;
+        }
+        actualizarTabla(LS_vehiculos);
+        const filas = document.querySelectorAll('tr');
+        manejadorEventoFilas(filas);
+    });
+    
+    complementosTabla.appendChild(selectorTipo);
+    crearCheckboxs();
+    crearCalculadoraPromedio();
     let props = Arr_GetAllUniqueProps(vehiculos);
 
     divTabla.appendChild(crearTabla(props, vehiculos));
@@ -122,4 +150,24 @@ function crearCheckboxs() {
         complementosTabla.appendChild(chbox);
         complementosTabla.appendChild(lbchbox);
     });
+}
+
+function crearCalculadoraPromedio(){
+    let elementos = [];
+    const inputPromedio = document.createElement("input");
+    const botonCalcular = document.createElement("button");
+    const labelCalcular = document.createElement("label");
+
+    labelCalcular.innerText = "Promedio Velocidad Maxima";
+    botonCalcular.innerText = "calcular";
+
+    botonCalcular.addEventListener("click", () =>{
+        let LS_vehiculos = toObjs(localStorage.getObj("vehiculos"));
+        let promedio = LS_vehiculos.reduce((acc, obj) => acc + obj.velMax, 0) / LS_vehiculos.length;
+        inputPromedio.value = promedio.toFixed(2);
+    });
+    elementos.push(inputPromedio);
+    elementos.push(botonCalcular);
+    elementos.push(labelCalcular);
+    elementos.forEach(e => complementosTabla.appendChild(e));
 }

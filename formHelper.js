@@ -35,15 +35,9 @@ export function crearFormUpdate(formulario, obj) {
     formulario.innerText = "Formulario Modificacion";
     let elementos = [];
     let opciones = ["Terrestre", "Aereo"];
-    const selectorTipo = document.createElement("select");
+    const selectorTipo = crearSelector(opciones);
     selectorTipo.disabled = true;
-
-    for (var i = 0; i < opciones.length; i++) {
-        var option = document.createElement("option");
-        option.value = opciones[i];
-        option.text = opciones[i];        
-        selectorTipo.appendChild(option);
-    }
+    
     if(obj instanceof Terrestre) selectorTipo.selectedIndex = 0;
     else if(obj instanceof Aereo) selectorTipo.selectedIndex = 1;
     
@@ -137,16 +131,11 @@ export function crearFormAlta(formulario){
         option.value = opciones[i];
         option.text = opciones[i];        
         selectorTipo.appendChild(option);
-
-
-        
         elementos.push(selectorTipo);
     }
     selectorTipo.addEventListener("change", (event) => {
         botonGuardar.disabled = false;
         let nuevosFormFields = [];
-
-        
         const elementosAEliminar = ["cantPue", "cantRue", "altMax", "autonomia"];
         removerCampos(elementosAEliminar);
 
@@ -227,6 +216,15 @@ export function crearFormAlta(formulario){
         }
     });
 
+    const botonCancelar = document.createElement('button');
+    botonCancelar.innerText = "Cancelar";
+    elementos.push(botonCancelar);
+
+    botonCancelar.addEventListener('click', () => {
+        const eventRefrescar = new CustomEvent('refrescarTablaVehiculos');
+        document.dispatchEvent(eventRefrescar);
+    });
+
     elementos.forEach((e) => formulario.appendChild(e));
 }
 
@@ -244,4 +242,15 @@ function validarInputs(inputs, objType){
         datosInvalidos["autonomia"] = inputs["autonomia"] > 0;
     }
     return !Object.values(datosInvalidos).some(value => value === false);
+}
+
+export function crearSelector(opciones){
+    const selectorTipo = document.createElement("select");    
+    for (var i = 0; i < opciones.length; i++) {
+        var o = document.createElement("option");
+        o.value = opciones[i];
+        o.text = opciones[i];        
+        selectorTipo.appendChild(o);
+    }
+    return selectorTipo;
 }
