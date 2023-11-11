@@ -7,7 +7,7 @@ let divTabla;
 let formDatos;
 let complementosTabla;
 
-let vistaData = document.getElementById("dataOut");
+let dataOut = document.getElementById("dataOut");
 let filtroSeleccionado = 0;
 
 export function inicializarManejadores() {
@@ -26,7 +26,7 @@ export function inicializarManejadores() {
         actualizarTabla(LS_vehiculos);
         const filas = document.querySelectorAll('tr');
         manejadorEventoFilas(filas);
-        vistaData.style.display = "block";
+        dataOut.style.display = "block";
     });
 
     document.addEventListener('ordenarTabla', (event) => {
@@ -51,6 +51,8 @@ export function inicializarManejadores() {
 }
 
 export function actualizarTabla(vehiculos) {
+    GenerarVista("tabla");
+
     vaciarElemento(divTabla);
     vaciarElemento(complementosTabla);
 
@@ -88,10 +90,13 @@ export function actualizarTabla(vehiculos) {
     const botonAgregar = document.createElement('button');
     botonAgregar.innerHTML = "Agregar";
     botonAgregar.addEventListener('click', () => {
-        vistaData.style.display = "none";
+        dataOut.style.display = "none";
+        dataIn.style.display = "block";
+
         crearFormAlta(formDatos);
     });
     divTabla.appendChild(botonAgregar);
+
 }
 
 function manejadorEventoFilas(filas) {
@@ -103,7 +108,7 @@ function manejadorEventoFilas(filas) {
                 let idFila = fila.id;
                 let obj = LS_vehiculos.find((vehiculo) => vehiculo.id == idFila);
                 vaciarElemento(formDatos);
-                vistaData.style.display = "none";
+                GenerarVista("form");
                 crearFormUpdate(formDatos, obj);
             });
         }
@@ -170,4 +175,17 @@ function crearCalculadoraPromedio(){
     elementos.push(botonCalcular);
     elementos.push(labelCalcular);
     elementos.forEach(e => complementosTabla.appendChild(e));
+}
+
+function GenerarVista(mostrar){
+    if (mostrar == "form") {
+        dataOut.style.display = "none";
+        dataIn.style.display = "block";
+    }
+    else if (mostrar == "tabla"){
+        dataIn.style.display = "none";
+        dataOut.style.display = "inline-flex";
+        dataOut.flexDirection = "column";
+    }
+    
 }
